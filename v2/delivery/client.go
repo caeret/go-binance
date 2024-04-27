@@ -14,8 +14,9 @@ import (
 	"os"
 	"time"
 
+	simplejson "github.com/bitly/go-simplejson"
+
 	"github.com/adshao/go-binance/v2/common"
-	"github.com/bitly/go-simplejson"
 )
 
 // SideType define side type of order
@@ -176,8 +177,8 @@ func newJSON(data []byte) (j *simplejson.Json, err error) {
 }
 
 // getApiEndpoint return the base endpoint of the WS according the UseTestnet flag
-func getApiEndpoint() string {
-	if UseTestnet {
+func getApiEndpoint(useTestnet bool) string {
+	if useTestnet {
 		return baseApiTestnetUrl
 	}
 	return baseApiMainUrl
@@ -186,11 +187,12 @@ func getApiEndpoint() string {
 // NewClient initialize an API client instance with API key and secret key.
 // You should always call this function before using this SDK.
 // Services will be created by the form client.NewXXXService().
-func NewClient(apiKey, secretKey string) *Client {
+func NewClient(apiKey, secretKey string, opts ...common.ClientOptionFunc) *Client {
+	clientConfig := common.ParseClientConfig(opts...)
 	return &Client{
 		APIKey:     apiKey,
 		SecretKey:  secretKey,
-		BaseURL:    getApiEndpoint(),
+		BaseURL:    getApiEndpoint(clientConfig.UseTestnet),
 		UserAgent:  "Binance/golang",
 		HTTPClient: http.DefaultClient,
 		Logger:     log.New(os.Stderr, "Binance-golang ", log.LstdFlags),

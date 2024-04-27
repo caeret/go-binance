@@ -14,7 +14,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/bitly/go-simplejson"
+	simplejson "github.com/bitly/go-simplejson"
 	jsoniter "github.com/json-iterator/go"
 
 	"github.com/adshao/go-binance/v2/common"
@@ -107,9 +107,6 @@ var (
 	BaseAPIMainURL    = "https://api.binance.com"
 	BaseAPITestnetURL = "https://testnet.binance.vision"
 )
-
-// UseTestnet switch all the API endpoints from production to the testnet
-var UseTestnet = false
 
 // Redefining the standard package
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -259,8 +256,8 @@ func newJSON(data []byte) (j *simplejson.Json, err error) {
 }
 
 // getAPIEndpoint return the base endpoint of the Rest API according the UseTestnet flag
-func getAPIEndpoint() string {
-	if UseTestnet {
+func getAPIEndpoint(useTestnet bool) string {
+	if useTestnet {
 		return BaseAPITestnetURL
 	}
 	return BaseAPIMainURL
@@ -269,11 +266,12 @@ func getAPIEndpoint() string {
 // NewClient initialize an API client instance with API key and secret key.
 // You should always call this function before using this SDK.
 // Services will be created by the form client.NewXXXService().
-func NewClient(apiKey, secretKey string) *Client {
+func NewClient(apiKey, secretKey string, opts ...common.ClientOptionFunc) *Client {
+	clientConfig := common.ParseClientConfig(opts...)
 	return &Client{
 		APIKey:     apiKey,
 		SecretKey:  secretKey,
-		BaseURL:    getAPIEndpoint(),
+		BaseURL:    getAPIEndpoint(clientConfig.UseTestnet),
 		UserAgent:  "Binance/golang",
 		HTTPClient: http.DefaultClient,
 		Logger:     log.New(os.Stderr, "Binance-golang ", log.LstdFlags),
@@ -281,7 +279,8 @@ func NewClient(apiKey, secretKey string) *Client {
 }
 
 // NewProxiedClient passing a proxy url
-func NewProxiedClient(apiKey, secretKey, proxyUrl string) *Client {
+func NewProxiedClient(apiKey, secretKey, proxyUrl string, opts ...common.ClientOptionFunc) *Client {
+	clientConfig := common.ParseClientConfig(opts...)
 	proxy, err := url.Parse(proxyUrl)
 	if err != nil {
 		log.Fatal(err)
@@ -293,7 +292,7 @@ func NewProxiedClient(apiKey, secretKey, proxyUrl string) *Client {
 	return &Client{
 		APIKey:    apiKey,
 		SecretKey: secretKey,
-		BaseURL:   getAPIEndpoint(),
+		BaseURL:   getAPIEndpoint(clientConfig.UseTestnet),
 		UserAgent: "Binance/golang",
 		HTTPClient: &http.Client{
 			Transport: tr,

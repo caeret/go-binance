@@ -141,7 +141,7 @@ type FuturesTransfer struct {
 	Asset     string                    `json:"asset"`
 	TranID    int64                     `json:"tranId"`
 	Amount    decimal.Decimal           `json:"amount"`
-	Type      int64                     `json:"type"`
+	Type      FuturesTransferType       `json:"type"`
 	Timestamp int64                     `json:"timestamp"`
 	Status    FuturesTransferStatusType `json:"status"`
 }

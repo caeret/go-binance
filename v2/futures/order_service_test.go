@@ -4,8 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/adshao/go-binance/v2/common"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/adshao/go-binance/v2/common"
 )
 
 type baseOrderTestSuite struct {
@@ -185,9 +187,9 @@ func (s *orderServiceTestSuite) TestListOpenOrders() {
 		Symbol:        symbol,
 		OrderID:       1,
 		ClientOrderID: "myOrder1",
-		Price:         "0.1",
+		Price:         decimal.RequireFromString("0.1"),
 		ReduceOnly:    false,
-		OrigQuantity:  "1.0",
+		OrigQuantity:  decimal.RequireFromString("1.0"),
 		CumQuantity:   "1.0",
 		CumQuote:      "1.0",
 		Status:        OrderStatusTypeNew,
@@ -275,9 +277,9 @@ func (s *orderServiceTestSuite) TestGetOpenOrder() {
 		Symbol:        symbol,
 		OrderID:       orderId,
 		ClientOrderID: "myOrder1",
-		Price:         "0.1",
+		Price:         decimal.RequireFromString("0.1"),
 		ReduceOnly:    false,
-		OrigQuantity:  "1.0",
+		OrigQuantity:  decimal.RequireFromString("1.0"),
 		CumQuantity:   "1.0",
 		CumQuote:      "1.0",
 		Status:        OrderStatusTypeNew,
@@ -341,10 +343,10 @@ func (s *orderServiceTestSuite) TestGetOrder() {
 		Symbol:           symbol,
 		OrderID:          1,
 		ClientOrderID:    origClientOrderID,
-		Price:            "0.1",
+		Price:            decimal.RequireFromString("0.1"),
 		ReduceOnly:       false,
-		OrigQuantity:     "1.0",
-		ExecutedQuantity: "0.0",
+		OrigQuantity:     decimal.RequireFromString("1.0"),
+		ExecutedQuantity: decimal.RequireFromString("0.0"),
 		CumQuote:         "0.0",
 		Status:           OrderStatusTypeNew,
 		TimeInForce:      TimeInForceTypeGTC,
@@ -415,10 +417,10 @@ func (s *orderServiceTestSuite) TestListOrders() {
 		Symbol:           symbol,
 		OrderID:          1,
 		ClientOrderID:    "myOrder1",
-		Price:            "0.1",
+		Price:            decimal.RequireFromString("0.1"),
 		ReduceOnly:       false,
-		OrigQuantity:     "1.0",
-		ExecutedQuantity: "1.0",
+		OrigQuantity:     decimal.RequireFromString("1.0"),
+		ExecutedQuantity: decimal.RequireFromString("1.0"),
 		CumQuote:         "10.0",
 		Status:           OrderStatusTypeNew,
 		TimeInForce:      TimeInForceTypeGTC,
@@ -668,10 +670,10 @@ func (s *orderServiceTestSuite) TestCreateBatchOrders() {
 				Symbol:                  "BTCUSDT",
 				OrderID:                 22542179,
 				ClientOrderID:           "testOrder",
-				Price:                   "100",
+				Price:                   decimal.RequireFromString("100"),
 				ReduceOnly:              false,
-				OrigQuantity:            "10",
-				ExecutedQuantity:        "0",
+				OrigQuantity:            decimal.RequireFromString("10"),
+				ExecutedQuantity:        decimal.RequireFromString("0"),
 				CumQuantity:             "0",
 				CumQuote:                "0",
 				Status:                  "NEW",
@@ -684,7 +686,7 @@ func (s *orderServiceTestSuite) TestCreateBatchOrders() {
 				WorkingType:             "CONTRACT_PRICE",
 				ActivatePrice:           "9020",
 				PriceRate:               "0.3",
-				AvgPrice:                "0.00000",
+				AvgPrice:                decimal.RequireFromString("0.00000"),
 				OrigType:                "TRAILING_STOP_MARKET",
 				PositionSide:            "SHORT",
 				PriceProtect:            false,

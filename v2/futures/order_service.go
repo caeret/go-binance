@@ -620,7 +620,7 @@ func (s *CancelMultiplesOrdersService) Do(ctx context.Context, opts ...RequestOp
 		r.setFormParam("orderIdList", orderIDListString)
 	}
 	if s.origClientOrderIDList != nil {
-		r.setFormParam("origClientOrderIdList", s.origClientOrderIDList)
+		r.setFormParam("origClientOrderIdList", common.EncodeStringList(s.origClientOrderIDList))
 	}
 	data, _, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {

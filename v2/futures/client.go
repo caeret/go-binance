@@ -463,6 +463,11 @@ func (c *Client) NewCancelMultipleOrdersService() *CancelMultiplesOrdersService 
 	return &CancelMultiplesOrdersService{c: c}
 }
 
+// NewUpdateOrderService init update order service
+func (c *Client) NewUpdateOrderService() *UpdateOrderService {
+	return &UpdateOrderService{c: c}
+}
+
 // NewGetOpenOrderService init get open order service
 func (c *Client) NewGetOpenOrderService() *GetOpenOrderService {
 	return &GetOpenOrderService{c: c}

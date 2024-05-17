@@ -936,3 +936,117 @@ func (s *CreateBatchOrdersService) Do(ctx context.Context, opts ...RequestOption
 
 	return batchCreateOrdersResponse, nil
 }
+
+// UpdateOrderService update order
+type UpdateOrderService struct {
+	c                 *Client
+	symbol            string
+	side              SideType
+	quantity          string
+	price             string
+	orderID           *int64
+	origClientOrderID *string
+}
+
+// Symbol set symbol
+func (s *UpdateOrderService) Symbol(symbol string) *UpdateOrderService {
+	s.symbol = symbol
+	return s
+}
+
+// Side set side
+func (s *UpdateOrderService) Side(side SideType) *UpdateOrderService {
+	s.side = side
+	return s
+}
+
+// Quantity set quantity
+func (s *UpdateOrderService) Quantity(quantity string) *UpdateOrderService {
+	s.quantity = quantity
+	return s
+}
+
+// Price set price
+func (s *UpdateOrderService) Price(price string) *UpdateOrderService {
+	s.price = price
+	return s
+}
+
+// OrderID set orderID
+func (s *UpdateOrderService) OrderID(orderID int64) *UpdateOrderService {
+	s.orderID = &orderID
+	return s
+}
+
+// OrigClientOrderID set origClientOrderID
+func (s *UpdateOrderService) OrigClientOrderID(origClientOrderID string) *UpdateOrderService {
+	s.origClientOrderID = &origClientOrderID
+	return s
+}
+
+func (s *UpdateOrderService) updateOrder(ctx context.Context, endpoint string, opts ...RequestOption) (data []byte, header *http.Header, err error) {
+
+	r := &request{
+		method:   http.MethodPut,
+		endpoint: endpoint,
+		secType:  secTypeSigned,
+	}
+	m := params{
+		"symbol":   s.symbol,
+		"side":     s.side,
+		"quantity": s.quantity,
+		"price":    s.price,
+	}
+	if s.orderID != nil {
+		m["orderId"] = *s.orderID
+	}
+	if s.origClientOrderID != nil {
+		m["origClientOrderId"] = *s.origClientOrderID
+	}
+	r.setFormParams(m)
+	data, header, err = s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return []byte{}, &http.Header{}, err
+	}
+	return data, header, nil
+}
+
+// Do send request
+func (s *UpdateOrderService) Do(ctx context.Context, opts ...RequestOption) (res *UpdateOrderResponse, err error) {
+	data, _, err := s.updateOrder(ctx, "/fapi/v1/order", opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(UpdateOrderResponse)
+	err = json.Unmarshal(data, res)
+
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+// UpdateOrderResponse define response of canceling order
+type UpdateOrderResponse struct {
+	ClientOrderID    string           `json:"clientOrderId"`
+	CumQuantity      string           `json:"cumQty"`
+	CumQuote         string           `json:"cumQuote"`
+	ExecutedQuantity string           `json:"executedQty"`
+	OrderID          int64            `json:"orderId"`
+	OrigQuantity     string           `json:"origQty"`
+	Price            string           `json:"price"`
+	ReduceOnly       bool             `json:"reduceOnly"`
+	Side             SideType         `json:"side"`
+	Status           OrderStatusType  `json:"status"`
+	StopPrice        string           `json:"stopPrice"`
+	Symbol           string           `json:"symbol"`
+	TimeInForce      TimeInForceType  `json:"timeInForce"`
+	Type             OrderType        `json:"type"`
+	UpdateTime       int64            `json:"updateTime"`
+	WorkingType      WorkingType      `json:"workingType"`
+	ActivatePrice    string           `json:"activatePrice"`
+	PriceRate        string           `json:"priceRate"`
+	OrigType         string           `json:"origType"`
+	PositionSide     PositionSideType `json:"positionSide"`
+	PriceProtect     bool             `json:"priceProtect"`
+}

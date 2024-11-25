@@ -3,6 +3,8 @@ package binance
 import (
 	"context"
 	"net/http"
+
+	"github.com/shopspring/decimal"
 )
 
 // FuturesTransferService transfer asset between spot account and futures account
@@ -140,8 +142,8 @@ type FuturesTransferHistory struct {
 type FuturesTransfer struct {
 	Asset     string                    `json:"asset"`
 	TranID    int64                     `json:"tranId"`
-	Amount    string                    `json:"amount"`
-	Type      int64                     `json:"type"`
+	Amount    decimal.Decimal           `json:"amount"`
+	Type      FuturesTransferType       `json:"type"`
 	Timestamp int64                     `json:"timestamp"`
 	Status    FuturesTransferStatusType `json:"status"`
 }

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"strings"
 )
 
 // AmountToLotSize converts an amount to a lot sized amount
@@ -41,4 +42,13 @@ func ToInt64(digit interface{}) (i int64, err error) {
 		return int64(floatVal), nil
 	}
 	return 0, fmt.Errorf("unexpected digit: %v", digit)
+}
+
+func EncodeStringList(in []string) string {
+	l := make([]string, len(in))
+	copy(l, in)
+	for i := range l {
+		l[i] = `"` + l[i] + `"`
+	}
+	return "[" + strings.Join(l, ",") + "]"
 }

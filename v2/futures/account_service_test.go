@@ -3,6 +3,7 @@ package futures
 import (
 	"testing"
 
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -42,7 +43,7 @@ func (s *accountServiceTestSuite) TestGetBalance() {
 		Balance:            "122607.35137903",
 		CrossWalletBalance: "23.72469206",
 		CrossUnPnl:         "0.00000000",
-		AvailableBalance:   "23.72469206",
+		AvailableBalance:   decimal.RequireFromString("23.72469206"),
 		MaxWithdrawAmount:  "23.72469206",
 	}
 	s.assertBalanceEqual(e, res[0])

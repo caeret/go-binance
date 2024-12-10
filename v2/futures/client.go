@@ -260,6 +260,26 @@ func NewProxiedClient(apiKey, secretKey, proxyUrl string, opts ...common.ClientO
 	}
 }
 
+// NewProxiedClient2 passing a proxy url
+func NewProxiedClient2(apiKey, secretKey string, proxy func(r *http.Request) (*url.URL, error), opts ...common.ClientOptionFunc) *Client {
+	tr := &http.Transport{
+		Proxy:           proxy,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	clientConfig := common.ParseClientConfig(opts...)
+	return &Client{
+		APIKey:    apiKey,
+		SecretKey: secretKey,
+		KeyType:   common.KeyTypeHmac,
+		BaseURL:   getApiEndpoint(clientConfig.UseTestnet),
+		UserAgent: "Binance/golang",
+		HTTPClient: &http.Client{
+			Transport: tr,
+		},
+		Logger: log.New(os.Stderr, "Binance-golang ", log.LstdFlags),
+	}
+}
+
 type doFunc func(req *http.Request) (*http.Response, error)
 
 // Client define API client

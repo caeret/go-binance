@@ -387,6 +387,26 @@ func NewProxiedClient(apiKey, secretKey, proxyUrl string, opts ...common.ClientO
 	}
 }
 
+// NewProxiedClient2 passing a proxy url
+func NewProxiedClient2(apiKey, secretKey string, proxy func(r *http.Request) (*url.URL, error), opts ...common.ClientOptionFunc) *Client {
+	clientConfig := common.ParseClientConfig(opts...)
+	tr := &http.Transport{
+		Proxy:           proxy,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	return &Client{
+		APIKey:    apiKey,
+		SecretKey: secretKey,
+		KeyType:   common.KeyTypeHmac,
+		BaseURL:   getAPIEndpoint(clientConfig.UseTestnet),
+		UserAgent: "Binance/golang",
+		HTTPClient: &http.Client{
+			Transport: tr,
+		},
+		Logger: log.New(os.Stderr, "Binance-golang ", log.LstdFlags),
+	}
+}
+
 // NewFuturesClient initialize client for futures API
 func NewFuturesClient(apiKey, secretKey string) *futures.Client {
 	return futures.NewClient(apiKey, secretKey)

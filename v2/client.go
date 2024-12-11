@@ -363,6 +363,22 @@ func NewClient(apiKey, secretKey string, opts ...common.ClientOptionFunc) *Clien
 	}
 }
 
+// NewClient2 passing a proxy url
+func NewClient2(apiKey, secretKey string, opts ...common.ClientOptionFunc) *Client {
+	clientConfig := common.ParseClientConfig(opts...)
+	return &Client{
+		APIKey:    apiKey,
+		SecretKey: secretKey,
+		KeyType:   common.KeyTypeHmac,
+		BaseURL:   getAPIEndpoint(clientConfig.UseTestnet),
+		UserAgent: "Binance/golang",
+		HTTPClient: &http.Client{
+			Transport: clientConfig.RoundTripper,
+		},
+		Logger: log.New(os.Stderr, "Binance-golang ", log.LstdFlags),
+	}
+}
+
 // NewProxiedClient passing a proxy url
 func NewProxiedClient(apiKey, secretKey, proxyUrl string, opts ...common.ClientOptionFunc) *Client {
 	clientConfig := common.ParseClientConfig(opts...)
@@ -372,26 +388,6 @@ func NewProxiedClient(apiKey, secretKey, proxyUrl string, opts ...common.ClientO
 	}
 	tr := &http.Transport{
 		Proxy:           http.ProxyURL(proxy),
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	return &Client{
-		APIKey:    apiKey,
-		SecretKey: secretKey,
-		KeyType:   common.KeyTypeHmac,
-		BaseURL:   getAPIEndpoint(clientConfig.UseTestnet),
-		UserAgent: "Binance/golang",
-		HTTPClient: &http.Client{
-			Transport: tr,
-		},
-		Logger: log.New(os.Stderr, "Binance-golang ", log.LstdFlags),
-	}
-}
-
-// NewProxiedClient2 passing a proxy url
-func NewProxiedClient2(apiKey, secretKey string, proxy func(r *http.Request) (*url.URL, error), opts ...common.ClientOptionFunc) *Client {
-	clientConfig := common.ParseClientConfig(opts...)
-	tr := &http.Transport{
-		Proxy:           proxy,
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	return &Client{

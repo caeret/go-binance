@@ -1,7 +1,12 @@
 package common
 
+import (
+	"net/http"
+)
+
 type ClientConfig struct {
-	UseTestnet bool
+	UseTestnet   bool
+	RoundTripper http.RoundTripper
 }
 
 func ParseClientConfig(opts ...ClientOptionFunc) ClientConfig {
@@ -17,5 +22,11 @@ type ClientOptionFunc func(*ClientConfig)
 func UseTestnet(useTestnet bool) ClientOptionFunc {
 	return func(cfg *ClientConfig) {
 		cfg.UseTestnet = useTestnet
+	}
+}
+
+func WithRoundTripper(rt http.RoundTripper) ClientOptionFunc {
+	return func(cfg *ClientConfig) {
+		cfg.RoundTripper = rt
 	}
 }

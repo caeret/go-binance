@@ -1384,3 +1384,7 @@ func (c *Client) NewSimpleEarnService() *SimpleEarnService {
 }
 
 // ----- end simple earn service -----
+
+func (c *Client) NewGetFundingAssetService() *GetFundingAssetService {
+	return &GetFundingAssetService{c: c}
+}

@@ -2,6 +2,7 @@ package binance
 
 import (
 	"fmt"
+	"github.com/shopspring/decimal"
 	"testing"
 	"time"
 
@@ -27,7 +28,7 @@ func (s *userUniversalTransferTestSuite) TestUserUniversalTransfer() {
 
 	types := UserUniversalTransferTypeMainToUmFutures
 	asset := "USDT"
-	amount := 0.1
+	amount := decimal.NewFromFloat(0.1)
 	fromSymbol := "USDT"
 	toSymbol := "USDT"
 

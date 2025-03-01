@@ -1,6 +1,7 @@
 package binance
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/adshao/go-binance/v2/common"
@@ -59,6 +60,10 @@ type OrderCreateWsRequest struct {
 // NewOrderCreateWsRequest init OrderCreateWsRequest
 func NewOrderCreateWsRequest() *OrderCreateWsRequest {
 	return &OrderCreateWsRequest{}
+}
+
+func (s *OrderCreateWsRequest) GetParams() map[string]interface{} {
+	return s.buildParams()
 }
 
 // buildParams builds params

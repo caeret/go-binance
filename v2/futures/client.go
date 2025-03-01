@@ -163,7 +163,9 @@ const (
 	MarginTypeIsolated MarginType = "ISOLATED"
 	MarginTypeCrossed  MarginType = "CROSSED"
 
-	ContractTypePerpetual ContractType = "PERPETUAL"
+	ContractTypePerpetual      ContractType = "PERPETUAL"
+	ContractTypeCurrentQuarter ContractType = "CURRENT_QUARTER"
+	ContractTypeNextQuarter    ContractType = "NEXT_QUARTER"
 
 	UserDataEventTypeListenKeyExpired    UserDataEventType = "listenKeyExpired"
 	UserDataEventTypeMarginCall          UserDataEventType = "MARGIN_CALL"
@@ -498,6 +500,11 @@ func (c *Client) NewCreateBatchOrdersService() *CreateBatchOrdersService {
 	return &CreateBatchOrdersService{c: c}
 }
 
+// NewModifyBatchOrdersService init modifying batch order service
+func (c *Client) NewModifyBatchOrdersService() *ModifyBatchOrdersService {
+	return &ModifyBatchOrdersService{c: c}
+}
+
 // NewGetOrderService init get order service
 func (c *Client) NewGetOrderService() *GetOrderService {
 	return &GetOrderService{c: c}
@@ -543,9 +550,12 @@ func (c *Client) NewGetBalanceService() *GetBalanceService {
 	return &GetBalanceService{c: c}
 }
 
-// NewGetPositionRiskService init getting position risk service
 func (c *Client) NewGetPositionRiskService() *GetPositionRiskService {
 	return &GetPositionRiskService{c: c}
+}
+
+func (c *Client) NewGetPositionRiskV3Service() *GetPositionRiskV3Service {
+	return &GetPositionRiskV3Service{c: c}
 }
 
 // NewGetPositionMarginHistoryService init getting position margin history service

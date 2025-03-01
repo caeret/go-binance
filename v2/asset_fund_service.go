@@ -2,6 +2,7 @@ package binance
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/shopspring/decimal"
 	"net/http"
 )
